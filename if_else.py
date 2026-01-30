@@ -1,5 +1,3 @@
-"""How if/else works."""
-
 name = input("what is you name?")
 
 print(f"Hello {name}")
