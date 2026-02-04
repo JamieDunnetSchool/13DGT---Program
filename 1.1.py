@@ -1,36 +1,28 @@
-"""This program is a for a menu."""
-
-
 Bread = {
-        "Wholemeal": 1.00,
-        "White": 0.80,
-        "Cheesy White": 1.20,
-        "Gluten Free": 1.40
+        "1": ("Wholemeal", 1.00),
+        "2": ("White", 0.80),
+        "3": ("Cheesy White", 1.20),
+        "4": ("Gluten Free", 1.40)
     }
 Meat ={
-        "Chicken": 2.69,
-        "Beef": 3.00,
-        "Salami": 4.00,
-        "Vegan Slice": 3.30
+        "1": ("Chicken", 2.69),
+        "2": ("Beef", 3.00),
+        "3": ("Salami", 4.00),
+        "4": ("Vegan Slice", 3.30)
     }
 Garnish = {
-        "Onion": 1.69,
-        "Tomato": 1.00,
-        "Lettuce": 2.00,
-        "Cheese": 2.50
+        "1": ("Onion", 1.69),
+        "2": ("Tomato", 1.00),
+        "3": ("Lettuce", 2.00),
+        "4": ("Cheese", 2.50),
     }
 
 
 
-welcome = input("Welcome to online samwichs a subway rip off would you like to order? Yes/No")
+print("Welcome to online samwichs a subway rip off would you like to order?")
 
-def intro():
-    if welcome == "No" or "no":
-        print("If you did not want to order why did you start this?") 
+def bread():
+    bread = input ("What bread would you like \n 1 = Wholemeal $1.00 \n 2 = White $0.80 \n 3 = Cheesy White $1.20 \n Gluten Free $1.40  ")
 
-    elif welcome == "Yes" or "yes":
-        print("What kind of bread do you want?")
 
-    else:
-        print("You must say yes or no.") 
         
