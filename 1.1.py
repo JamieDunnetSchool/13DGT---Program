@@ -21,8 +21,7 @@ Garnish = {
 
 print("Welcome to online samwichs a subway rip off would you like to order?")
 
-def bread():
-    bread = input ("What bread would you like \n 1 = Wholemeal $1.00 \n 2 = White $0.80 \n 3 = Cheesy White $1.20 \n Gluten Free $1.40  ")
+bread = input("What bread would you like \n 1 = Wholemeal $1.00 \n 2 = White $0.80 \n 3 = Cheesy White $1.20 \n 4 = Gluten Free $1.40  ")
 
-
+print(bread)
         
