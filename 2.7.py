@@ -43,6 +43,9 @@ while not quit_game:
                 snake_y_change = 20
                 snake_x_change = 0
 
+    if snake_x >= 1000 or snake_x < 0 or snake_y >= 720 or snake_y < 0:
+        quit_game = True
+
     snake_x += snake_x_change
     snake_y += snake_y_change
     screen.fill(green)
