@@ -15,13 +15,13 @@ text_colour = (0, 0, 0)
 quit_game = False
 
 clock = pygame.time.Clock()
-snake_x = 490
-snake_y = 350
+snake_x = 500
+snake_y = 360
 snake_x_change = 0
 snake_y_change = 0
 
 food_x = round(random.randrange(20, 1000 - 20) / 20) * 20
-food_y = round(random.randrange(20, 720  - 20) / 20) * 20  # FIXED
+food_y = round(random.randrange(20, 720  - 20) / 20) * 20 
 
 font = pygame.font.Font("freesansbold.ttf", 50)
 
@@ -53,6 +53,9 @@ while not quit_game:
 
     snake_x += snake_x_change
     snake_y += snake_y_change
+    if snake_x == food_x and snake_y == food_y:
+        food_x = round(random.randrange(20, 1000 - 20) / 20) * 20
+        food_y = round(random.randrange(20, 720  - 20) / 20) * 20  # FIXED
 
     if snake_x >= 1000 or snake_x < 0 or snake_y >= 720 or snake_y < 0:
         screen.fill(green)
