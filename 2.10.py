@@ -47,8 +47,17 @@ def draw_snake(snake_list):
     for x in snake_list:
         pygame.draw.rect(screen, red, [x[0], x[1], 20 , 20])
 
-while not quit_game:
+def quitmenu() :
+    message("You died! Press X to quit, C to play again", black, white)
+    if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_x:
+                pygame.quit()
+                quit()
+            elif event.key == pygame.K_c:
+                print("pay")
 
+while not quit_game:
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             quit_game = True
@@ -76,15 +85,12 @@ while not quit_game:
         score += 1
         snake_length += 1
 
-    if snake_x >= 1000 or snake_x < 0 or snake_y >= 720 or snake_y < 0:
-        screen.fill(green)
-        message("You died!", black, white)
-        pygame.display.update()
-        time.sleep(3)
-        quit_game = True
-        continue
+    
 
     screen.fill(green)
+
+    if snake_x >= 1000 or snake_x < 0 or snake_y >= 720 or snake_y < 0:
+        quitmenu()
 
     food = pygame.Rect(food_x, food_y, 20, 20)
     apple = pygame.image.load('apple_3.png').convert_alpha()
@@ -105,11 +111,10 @@ while not quit_game:
             message("You died!", black, white)
             pygame.display.update()
             time.sleep(3)
-            quit_game = True
+            quitmenu()
 
     draw_snake(snake_list)
     show_score(textX, textY)
-
     pygame.display.update()
     clock.tick(10)
 
