@@ -33,6 +33,7 @@ textY = 10
 food_x = round(random.randrange(20, 1000 - 20) / 20) * 20
 food_y = round(random.randrange(20, 720  - 20) / 20) * 20
 
+
 font = pygame.font.Font("freesansbold.ttf", 50)
 
 def message(msg, txt_colour, bkgd_colour):
@@ -40,69 +41,47 @@ def message(msg, txt_colour, bkgd_colour):
     text_box = txt.get_rect(center=(500, 360))
     screen.blit(txt, text_box)
 
+def show_score(x, y):
+    score_text = font.render("Score: " + str(score), True, (255, 255, 255))
+    screen.blit(score_text, (x, y))
+
 def draw_snake(snake_list):
     for x in snake_list:
         pygame.draw.rect(screen, red, [x[0], x[1], 20 , 20])
 
 def load_high_score():
     try:
-        with open("HI_score.txt", "r") as hi_score_file:
-            value = hi_score_file.read().strip()
-            if value == "":
-                return 0
-            return int(value)
+        hi_score_file = open("HI_score.txt", 'r')
     except:
-        # if file doesn't exist, create it with 0
-        with open("HI_score.txt", "w") as hi_score_file:
-            hi_score_file.write("0")
-        return 0
-
-def save_high_score(value):
-    with open("HI_score.txt", "w") as hi_score_file:
-        hi_score_file.write(str(value))
-
-# ---- High score setup ----
-high_score = load_high_score()
-
-def show_scores(x, y):
-    # Display both current score and high score
-    score_text = font.render("Score: " + str(score), True, (255, 255, 255))
-    hi_text = font.render("High: " + str(high_score), True, (255, 255, 255))
-    screen.blit(score_text, (x, y))
-    screen.blit(hi_text, (x, y + 55))  # place high score under score
+        hi_score_file = open("HI_score.txt", 'w')
+        hi_score_file.write("0")
+        hi_score_file = open("HI_score.txt", 'r')
+        value = hi_score_file.read()
+        hi_score_file.close()
+    return value
+   
 
 while not quit_game:
-
+    
     while game_ending == True:
-        screen.fill(green)
         message("You died! Press X to quit, C to play again", black, white)
-        show_scores(textX, textY)
         pygame.display.update()
-
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quit_game = True
-                game_ending = False
-                break
-
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_x:
-                    quit_game = True
-                    game_ending = False
-                    break
+                        print("HELLLLLLLO")
+                        quit_game = True
+                        game_ending = False
+                        break
+                elif event.key  == pygame.K_c:
+                        snake_length = 1
+                        score = 0
+                        snake_x = 500
+                        snake_y = 360
+                        snake_list = []
+                        pygame.draw.rect(screen, red, [x[0], x[1], 20 , 20])
+                        game_ending = False
 
-                elif event.key == pygame.K_c:
-                    snake_length = 1
-                    score = 0
-                    snake_x = 500
-                    snake_y = 360
-                    snake_x_change = 0
-                    snake_y_change = 0
-                    snake_list = []
-                    food_x = round(random.randrange(20, 1000 - 20) / 20) * 20
-                    food_y = round(random.randrange(20, 720  - 20) / 20) * 20
-                    game_ending = False
-                    break
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -130,10 +109,9 @@ while not quit_game:
         food_y = round(random.randrange(20, 720  - 20) / 20) * 20
         score += 1
         snake_length += 1
+        
 
-        # ---- Update high score in-game ----
-        if score > high_score:
-            high_score = score
+    
 
     screen.fill(green)
 
@@ -145,10 +123,13 @@ while not quit_game:
     resized_apple = pygame.transform.smoothscale(apple, [20,20])
     screen.blit(resized_apple, food)
 
+
+
     snake_head = []
     snake_head.append(snake_x)
     snake_head.append(snake_y)
     snake_list.append(snake_head)
+    
 
     if len(snake_list) > snake_length:
         del snake_list[0]
@@ -158,15 +139,9 @@ while not quit_game:
             game_ending = True
 
     draw_snake(snake_list)
-
-    # ---- Display both scores ----
-    show_scores(textX, textY)
-
+    show_score(textX, textY)
     pygame.display.update()
     clock.tick(10)
-
-# ---- Save high score when program closes ----
-save_high_score(high_score)
 
 pygame.quit()
 quit()
