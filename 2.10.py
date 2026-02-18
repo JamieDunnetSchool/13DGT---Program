@@ -33,6 +33,7 @@ textY = 10
 food_x = round(random.randrange(20, 1000 - 20) / 20) * 20
 food_y = round(random.randrange(20, 720  - 20) / 20) * 20
 
+
 font = pygame.font.Font("freesansbold.ttf", 50)
 
 def message(msg, txt_colour, bkgd_colour):
@@ -48,9 +49,18 @@ def draw_snake(snake_list):
     for x in snake_list:
         pygame.draw.rect(screen, red, [x[0], x[1], 20 , 20])
 
-
+def load_high_score():
+    try:
+        hi_score_file = open("HI_score.txt", 'r')
+    except:
+        hi_score_file = open("HI_score.txt", 'w')
+        hi_score_file.write("0")
+        hi_score_file = open("HI_score.txt", 'r')
+        value = hi_score_file.read()
+        hi_score_file.close()
+    return value
    
-
+high_score = load_high_score()
 while not quit_game:
     
     while game_ending == True:
@@ -68,9 +78,10 @@ while not quit_game:
                         score = 0
                         snake_x = 500
                         snake_y = 360
+                        snake_list = []
                         pygame.draw.rect(screen, red, [x[0], x[1], 20 , 20])
                         game_ending = False
-                        
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -98,6 +109,7 @@ while not quit_game:
         food_y = round(random.randrange(20, 720  - 20) / 20) * 20
         score += 1
         snake_length += 1
+        
 
     
 
@@ -111,10 +123,13 @@ while not quit_game:
     resized_apple = pygame.transform.smoothscale(apple, [20,20])
     screen.blit(resized_apple, food)
 
+
+
     snake_head = []
     snake_head.append(snake_x)
     snake_head.append(snake_y)
     snake_list.append(snake_head)
+    
 
     if len(snake_list) > snake_length:
         del snake_list[0]
