@@ -18,6 +18,7 @@ score = 0
 size_snake1 = 20
 size_snake2 = 20
 quit_game = False
+game_ending = False
 
 clock = pygame.time.Clock()
 snake_x = 500
@@ -47,17 +48,30 @@ def draw_snake(snake_list):
     for x in snake_list:
         pygame.draw.rect(screen, red, [x[0], x[1], 20 , 20])
 
-def quitmenu() :
-    message("You died! Press X to quit, C to play again", black, white)
-    if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_x:
-                pygame.quit()
-                quit()
-            elif event.key == pygame.K_c:
-                print("pay")
+
+   
 
 while not quit_game:
     
+    while game_ending == True:
+        message("You died! Press X to quit, C to play again", black, white)
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_x:
+                        print("HELLLLLLLO")
+                        quit_game = True
+                        game_ending = False
+                        break
+                elif event.key  == pygame.K_c:
+                        snake_length = 1
+                        score = 0
+                        snake_x = 500
+                        snake_y = 360
+                        pygame.draw.rect(screen, red, [x[0], x[1], 20 , 20])
+                        game_ending = False
+                        
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             quit_game = True
@@ -90,7 +104,7 @@ while not quit_game:
     screen.fill(green)
 
     if snake_x >= 1000 or snake_x < 0 or snake_y >= 720 or snake_y < 0:
-        quitmenu()
+        game_ending = True
 
     food = pygame.Rect(food_x, food_y, 20, 20)
     apple = pygame.image.load('apple_3.png').convert_alpha()
@@ -107,11 +121,7 @@ while not quit_game:
 
     for x in snake_list[:-1]:
         if x == snake_head:
-            screen.fill(green)
-            message("You died!", black, white)
-            pygame.display.update()
-            time.sleep(3)
-            quitmenu()
+            game_ending = True
 
     draw_snake(snake_list)
     show_score(textX, textY)
