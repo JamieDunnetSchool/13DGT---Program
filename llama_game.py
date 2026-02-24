@@ -22,7 +22,7 @@ quit_game = False
 clock = pygame.time.Clock()
 
 llama_x = 100
-llama_y = 200
+llama_y = 220
 llama_w = 40
 llama_h = 40
 
@@ -57,7 +57,12 @@ while not quit_game:
     ground_rect = pygame.Rect(0, 500 - ground_size2, ground_size1, ground_size2)
     pygame.draw.rect(screen, brown, ground_rect)
 
-    pygame.draw.rect(screen, white, (llama_x, llama_y, llama_w, llama_h))
+    llama = pygame.Rect(llama_x, llama_y, llama_h, llama_w)
+    fakellama = pygame.image.load('Llama.png').convert_alpha()
+    resized_llama = pygame.transform.smoothscale(fakellama, [llama_h,llama_w])
+    screen.blit(resized_llama, llama)
+
+
 
     pygame.display.update()
     clock.tick(10)
