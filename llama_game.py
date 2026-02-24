@@ -26,6 +26,11 @@ llama_y = 220
 llama_w = 40
 llama_h = 40
 
+cactus_x = 300
+cactus_y = 220
+cactus_w = 40
+cactus_h = 40
+
 snake_x_change = 0
 snake_y_change = 0
 
@@ -35,7 +40,7 @@ while not quit_game:
             quit_game = True
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP  or event.key == pygame.K_SPACE:
                 snake_y_change = -20
                 snake_x_change = 0
             elif event.key == pygame.K_DOWN:
@@ -62,6 +67,10 @@ while not quit_game:
     resized_llama = pygame.transform.smoothscale(fakellama, [llama_h,llama_w])
     screen.blit(resized_llama, llama)
 
+    cactus = pygame.Rect(cactus_x, cactus_y, cactus_h, cactus_w)
+    fakecac = pygame.image.load('cactus.png').convert_alpha()
+    resized_cactus = pygame.transform.smoothscale(fakecac, [cactus_h,cactus_w])
+    screen.blit(resized_cactus, cactus)
 
 
     pygame.display.update()
