@@ -17,7 +17,7 @@ white = (255, 255, 255)
 red = (255, 0, 0)
 blue = (78, 159, 229)
 brown = (150, 75, 0)
-
+fps = 60
 ground_size1 = 1000
 ground_size2 = 240
 quit_game = False
