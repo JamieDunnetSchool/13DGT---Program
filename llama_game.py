@@ -3,36 +3,6 @@ import time
 import random
 pygame.init()
 
-class cactus:
-
-    def __init__(self, food_x, food_y, food_image, points, name):
-        self.food_x = food_x
-        self.food_y = food_y
-        self.food_image = food_image
-        self.points = points
-        self.name = name
-
-    def make_food(self):
-        food = pygame.Rect(self.food_x, self.food_y, 20, 20)
-        food_png = "apple_" + str(self.food_image)+".png"
-        apple = pygame.image.load(food_png).convert_alpha()
-        resized_apple = pygame.transform.smoothscale(apple, [20,20])
-        screen.blit(resized_apple, food)
-
-    def eaten(self, snake_x, snake_y):
-        global snake_length, score
-        if snake_x == self.food_x and snake_y == self.food_y:
-            self.food_x = food_num(SCREEN_X)
-            self.food_y = food_num(SCREEN_Y)
-            print("Got it!!")
-            snake_length +=1
-            score += self.points
-            print(self.name)
-
-
-
-
-
 screen = pygame.display.set_mode((1000, 500))
 pygame.display.set_caption("Llama game")
 
@@ -54,7 +24,6 @@ quit_game = False
 
 clock = pygame.time.Clock()
 
-
 llama_x = 100
 llama_y = 220
 llama_w = 40
@@ -75,6 +44,45 @@ ground_y = 260 - llama_h
 gravity = 10
 jump_power = -50
 
+score = 0
+game_over = False
+
+class cactus:
+
+    def __init__(self, cactus_x, cactus_y, cactus_image, points, name, w, h, speed):
+        self.cactus_x = cactus_x
+        self.cactus_y = cactus_y
+        self.cactus_image = cactus_image
+        self.points = points
+        self.name = name
+        self.w = w
+        self.h = h
+        self.speed = speed
+    def make_food(self):
+        cactu = pygame.Rect(self.cactus_x, self.cactus_y, self.w, self.h)
+        cactus_png = str(self.cactus_image)
+        cac = pygame.image.load(cactus_png).convert_alpha()
+        resized_cac = pygame.transform.smoothscale(cac, [self.w, self.h])
+        screen.blit(resized_cac, cactu)
+
+    def hit(self, llama_x, llama_y, llama_w, llama_h):
+        global quit_game, game_over, score
+        self.cactus_x -= self.speed
+        cactus_rect = pygame.Rect(self.cactus_x, self.cactus_y, self.w, self.h)
+        llama_rect = pygame.Rect(llama_x, llama_y, llama_w, llama_h)
+        if llama_rect.colliderect(cactus_rect):
+            game_over = True
+            quit_game = True
+        if self.cactus_x < -self.w:
+            self.cactus_x = 1000 + random.randint(200, 600)
+            score += self.points
+
+cactus1 = cactus(1200, cactus_y, "cactus.png", 1, "cactus1", cactus_w, cactus_h, 10)
+cactus2 = cactus(1600, cactus_y, "cactus.png", 1, "cactus2", cactus_w, cactus_h, 10)
+cactus3 = cactus(2000, cactus_y, "cactus.png", 1, "cactus3", cactus_w, cactus_h, 10)
+
+cactus_list = [cactus1, cactus2, cactus3]
+
 while not quit_game:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -92,8 +100,6 @@ while not quit_game:
 
     llama_y += llama_y_change
     llama_y_change += gravity
-
-    cactus_x -= 10
 
     if llama_y >= ground_y:
         llama_y = ground_y
@@ -114,10 +120,9 @@ while not quit_game:
     resized_llama = pygame.transform.smoothscale(fakellama, [llama_h, llama_w])
     screen.blit(resized_llama, llama)
 
-    cactus = pygame.Rect(cactus_x, cactus_y, cactus_h, cactus_w)
-    fakecac = pygame.image.load('cactus.png').convert_alpha()
-    resized_cactus = pygame.transform.smoothscale(fakecac, [cactus_h, cactus_w])
-    screen.blit(resized_cactus, cactus)
+    for items in cactus_list:
+        cactus.make_food(items)
+        cactus.hit(items, llama_x, llama_y, llama_w, llama_h)
 
     pygame.display.update()
     clock.tick(10)
