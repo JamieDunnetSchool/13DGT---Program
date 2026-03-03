@@ -3,6 +3,36 @@ import time
 import random
 pygame.init()
 
+class cactus:
+
+    def __init__(self, food_x, food_y, food_image, points, name):
+        self.food_x = food_x
+        self.food_y = food_y
+        self.food_image = food_image
+        self.points = points
+        self.name = name
+
+    def make_food(self):
+        food = pygame.Rect(self.food_x, self.food_y, 20, 20)
+        food_png = "apple_" + str(self.food_image)+".png"
+        apple = pygame.image.load(food_png).convert_alpha()
+        resized_apple = pygame.transform.smoothscale(apple, [20,20])
+        screen.blit(resized_apple, food)
+
+    def eaten(self, snake_x, snake_y):
+        global snake_length, score
+        if snake_x == self.food_x and snake_y == self.food_y:
+            self.food_x = food_num(SCREEN_X)
+            self.food_y = food_num(SCREEN_Y)
+            print("Got it!!")
+            snake_length +=1
+            score += self.points
+            print(self.name)
+
+
+
+
+
 screen = pygame.display.set_mode((1000, 500))
 pygame.display.set_caption("Llama game")
 
@@ -23,6 +53,7 @@ ground_size2 = 240
 quit_game = False
 
 clock = pygame.time.Clock()
+
 
 llama_x = 100
 llama_y = 220
