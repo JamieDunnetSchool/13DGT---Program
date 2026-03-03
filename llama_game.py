@@ -49,19 +49,16 @@ game_over = False
 
 class cactus:
 
-    def __init__(self, cactus_x, cactus_y, cactus_image, points, name, w, h, speed):
+    def __init__(self, cactus_x, cactus_y, name, w, h, speed):
         self.cactus_x = cactus_x
         self.cactus_y = cactus_y
-        self.cactus_image = cactus_image
-        self.points = points
         self.name = name
         self.w = w
         self.h = h
         self.speed = speed
     def make_food(self):
         cactu = pygame.Rect(self.cactus_x, self.cactus_y, self.w, self.h)
-        cactus_png = str(self.cactus_image)
-        cac = pygame.image.load(cactus_png).convert_alpha()
+        cac = pygame.image.load("cactus.png").convert_alpha()
         resized_cac = pygame.transform.smoothscale(cac, [self.w, self.h])
         screen.blit(resized_cac, cactu)
 
@@ -77,9 +74,9 @@ class cactus:
             self.cactus_x = 1000 + random.randint(200, 600)
             score += self.points
 
-cactus1 = cactus(1200, cactus_y, "cactus.png", 1, "cactus1", cactus_w, cactus_h, 10)
-cactus2 = cactus(1600, cactus_y, "cactus.png", 1, "cactus2", cactus_w, cactus_h, 10)
-cactus3 = cactus(2000, cactus_y, "cactus.png", 1, "cactus3", cactus_w, cactus_h, 10)
+cactus1 = cactus(1200, cactus_y, "cactus1", cactus_w, cactus_h, 10)
+cactus2 = cactus(1600, cactus_y, "cactus2", cactus_w, cactus_h, 10)
+cactus3 = cactus(2000, cactus_y, "cactus3", cactus_w, cactus_h, 10)
 
 cactus_list = [cactus1, cactus2, cactus3]
 
