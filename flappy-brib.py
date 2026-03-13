@@ -205,7 +205,7 @@ while not quit_game:
     pygame.draw.rect(screen, brown, ground_rect)
 
     llama = pygame.Rect(llama_x, llama_y, llama_h, llama_w)
-    fakellama = pygame.image.load("yellobird-midflab.png").convert_alpha()
+    fakellama = pygame.image.load("yellowbird-midflap.png").convert_alpha()
     resized_llama = pygame.transform.smoothscale(fakellama, [llama_h, llama_w])
     screen.blit(resized_llama, llama)
 
