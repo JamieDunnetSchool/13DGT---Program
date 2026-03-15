@@ -12,6 +12,9 @@ pygame.display.set_caption("Fabbly- prip")
 game_icon = pygame.image.load("favicon.ico")
 pygame.display.set_icon(game_icon)
 
+background = pygame.image.load("background-day.png").convert()
+background = pygame.transform.smoothscale(background, (288, 512))
+
 pygame.key.set_repeat()
 
 green = (188, 227, 199)
@@ -21,10 +24,8 @@ red = (255, 0, 0)
 blue = (78, 159, 229)
 brown = (150, 75, 0)
 FPS = 30
-ground_size1 = 1000
-ground_size2 = 240
 quit_game = False
-textX = 750
+textX = 10
 textY = 10
 clock = pygame.time.Clock()
 llama_x = 100
@@ -32,7 +33,7 @@ llama_y = 220
 llama_w = 40
 llama_h = 40
 cactus_x = 1200
-cactus_y = 220
+cactus_y = 500
 cactus_w = 40
 cactus_h = 40
 llama_x_change = 0
@@ -40,7 +41,7 @@ llama_y_change = 0
 start_time = time.time()
 touch_ground = False
 jump_lock = False
-ground_y = 260 - llama_h
+ground_y = 512 - llama_h
 gravity = 5
 jump_power = -50
 score = 0
@@ -48,18 +49,18 @@ pass_score = 0
 final_score = 0
 game_over = False
 game_ending = False
-font = pygame.font.Font("freesansbold.ttf", 50)
+font = pygame.font.Font("freesansbold.ttf", 20)
 
 def message(msg, txt_colour, bkgd_colour):
     txt = font.render(msg, True, txt_colour, bkgd_colour)
-    text_box = txt.get_rect(center=(500, 360))
+    text_box = txt.get_rect(center=(144, 256))
     screen.blit(txt, text_box)
 
 def show_score(x, y):
     score_text = font.render("Score: " + str(score), True, (255, 255, 255))
     hi_text = font.render("High: " + str(high_score), True, (255, 255, 255))
     screen.blit(score_text, (x, y))
-    screen.blit(hi_text, (x, y + 55))
+    screen.blit(hi_text, (x, y + 25))
 
 def load_high_score():
     try:
@@ -149,9 +150,7 @@ while not quit_game:
             high_score = score
             save_high_score(high_score)
 
-        screen.fill(blue)
-        ground_rect = pygame.Rect(0, 500 - ground_size2, ground_size1, ground_size2)
-        pygame.draw.rect(screen, brown, ground_rect)
+        screen.blit(background, (0, 0))
         show_score(textX, textY)
         message("You died! Press X to quit, C to play again", black, white)
         pygame.display.update()
@@ -177,7 +176,7 @@ while not quit_game:
             quit_game = True
 
         if event.type == pygame.KEYDOWN:
-            if (event.key == pygame.K_UP or event.key == pygame.K_SPACE) and touch_ground == True and jump_lock == False:
+            if (event.key == pygame.K_UP or event.key == pygame.K_SPACE):
                 llama_y_change = jump_power
                 touch_ground = False
                 jump_lock = True
@@ -200,9 +199,8 @@ while not quit_game:
 
     score = int(time.time() - start_time) + pass_score
 
-    screen.fill(blue)
-    ground_rect = pygame.Rect(0, 500 - ground_size2, ground_size1, ground_size2)
-    pygame.draw.rect(screen, brown, ground_rect)
+    screen.blit(background, (0, 0))
+
 
     llama = pygame.Rect(llama_x, llama_y, llama_h, llama_w)
     fakellama = pygame.image.load("yellowbird-midflap.png").convert_alpha()
