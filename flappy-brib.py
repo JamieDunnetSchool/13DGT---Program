@@ -1,4 +1,4 @@
-### this program is a llama game for playing
+### this program is a flappy brib game for playing
 
 import pygame
 import time
@@ -33,17 +33,17 @@ llama_y = 220
 llama_w = 40
 llama_h = 40
 cactus_x = 1200
-cactus_y = 500
+cactus_y = 250
 cactus_w = 40
-cactus_h = 40
+cactus_h = 400
 llama_x_change = 0
 llama_y_change = 0
 start_time = time.time()
 touch_ground = False
 jump_lock = False
 ground_y = 512 - llama_h
-gravity = 5
-jump_power = -50
+gravity = 1
+jump_power = -12
 score = 0
 pass_score = 0
 final_score = 0
@@ -94,7 +94,8 @@ class cactus:
     def make_food(self):
         cactu = pygame.Rect(self.cactus_x, self.cactus_y, self.w, self.h)
         cac = pygame.image.load("pipe-green.png").convert_alpha()
-        resized_cac = pygame.transform.smoothscale(cac, [self.w, self.h])
+        cac_flip = pygame.transform.flip(cac, False, True)
+        resized_cac = pygame.transform.smoothscale(cac_flip, [self.w, self.h])
         screen.blit(resized_cac, cactu)
 
     def hit(self, llama_x, llama_y, llama_w, llama_h):
@@ -206,6 +207,12 @@ while not quit_game:
     fakellama = pygame.image.load("yellowbird-midflap.png").convert_alpha()
     resized_llama = pygame.transform.smoothscale(fakellama, [llama_h, llama_w])
     screen.blit(resized_llama, llama)
+
+    floor = pygame.Rect(llama_x, llama_y, llama_h, llama_w)
+    fakefloor = pygame.image.load("yellowbird-midflap.png").convert_alpha()
+    resized_floor = pygame.transform.smoothscale(fakellama, [llama_h, llama_w])
+    screen.blit(resized_llama, llama)
+
 
     for items in cactus_list:
         items.make_food()
