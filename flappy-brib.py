@@ -28,10 +28,10 @@ quit_game = False
 textX = 10
 textY = 10
 clock = pygame.time.Clock()
-llama_x = 100
-llama_y = 220
-llama_w = 40
-llama_h = 40
+brid_x = 100
+brid_y = 220
+brid_w = 40
+brid_h = 40
 cactus_x = 1200
 cactus_y = 250
 cactus_w = 40
@@ -39,9 +39,7 @@ cactus_h = 400
 llama_x_change = 0
 llama_y_change = 0
 start_time = time.time()
-touch_ground = False
-jump_lock = False
-ground_y = 512 - llama_h
+ground_y = 512 - brid_h
 gravity = 1
 jump_power = -12
 score = 0
@@ -98,11 +96,11 @@ class cactus:
         resized_cac = pygame.transform.smoothscale(cac_flip, [self.w, self.h])
         screen.blit(resized_cac, cactu)
 
-    def hit(self, llama_x, llama_y, llama_w, llama_h):
+    def hit(self, brid_x, brid_y, brid_w, brid_h):
         global game_ending, final_score, score
         self.cactus_x -= self.speed
         cactus_rect = pygame.Rect(self.cactus_x, self.cactus_y, self.w, self.h)
-        llama_rect = pygame.Rect(llama_x, llama_y, llama_w, llama_h)
+        llama_rect = pygame.Rect(brid_x, brid_y, brid_w, brid_h)
 
         if llama_rect.colliderect(cactus_rect):
             if game_ending == False:
@@ -116,12 +114,12 @@ class cactus:
         return 0
 
 def reset_game():
-    global llama_x, llama_y, llama_y_change, touch_ground, jump_lock
+    global brid_x, brid_y, llama_y_change, touch_ground, jump_lock
     global score, pass_score, start_time, game_ending, final_score
     global cactus1, cactus2, cactus3, cactus_list
 
-    llama_x = 100
-    llama_y = 220
+    brid_x = 100
+    brid_y = 220
     llama_y_change = 0
     touch_ground = False
     jump_lock = False
@@ -176,26 +174,21 @@ while not quit_game:
         if event.type == pygame.QUIT:
             quit_game = True
 
-        if event.type == pygame.KEYDOWN:
-            if (event.key == pygame.K_UP or event.key == pygame.K_SPACE):
+        if event.type == pygame.MOUSEBUTTONDOWN:
                 llama_y_change = jump_power
                 touch_ground = False
                 jump_lock = True
 
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP or event.key == pygame.K_SPACE:
-                jump_lock = False
-
-    llama_y += llama_y_change
+    brid_y += llama_y_change
     llama_y_change += gravity
 
-    if llama_y >= ground_y:
-        llama_y = ground_y
+    if brid_y >= ground_y:
+        brid_y = ground_y
         llama_y_change = 0
         touch_ground = True
 
-    if llama_y < 0:
-        llama_y = 0
+    if brid_y < 0:
+        brid_y = 0
         llama_y_change = 0
 
     score = int(time.time() - start_time) + pass_score
@@ -203,20 +196,20 @@ while not quit_game:
     screen.blit(background, (0, 0))
 
 
-    llama = pygame.Rect(llama_x, llama_y, llama_h, llama_w)
+    llama = pygame.Rect(brid_x, brid_y, brid_h, brid_w)
     fakellama = pygame.image.load("yellowbird-midflap.png").convert_alpha()
-    resized_llama = pygame.transform.smoothscale(fakellama, [llama_h, llama_w])
+    resized_llama = pygame.transform.smoothscale(fakellama, [brid_h, brid_w])
     screen.blit(resized_llama, llama)
 
-    floor = pygame.Rect(llama_x, llama_y, llama_h, llama_w)
+    floor = pygame.Rect(brid_x, brid_y, brid_h, brid_w)
     fakefloor = pygame.image.load("yellowbird-midflap.png").convert_alpha()
-    resized_floor = pygame.transform.smoothscale(fakellama, [llama_h, llama_w])
+    resized_floor = pygame.transform.smoothscale(fakellama, [brid_h, brid_w])
     screen.blit(resized_llama, llama)
 
 
     for items in cactus_list:
         items.make_food()
-        pass_score += items.hit(llama_x, llama_y, llama_w, llama_h)
+        pass_score += items.hit(brid_x, brid_y, brid_w, brid_h)
 
     show_score(textX, textY)
     pygame.display.update()
