@@ -34,8 +34,8 @@ clock = pygame.time.Clock()  # controls timing
 # bird position and size
 brid_x = 100
 brid_y = 220
-brid_w = 40
-brid_h = 40
+brid_w = 30
+brid_h = 30
 
 # pipe starting position and size
 pipe_x = 1200
@@ -139,7 +139,7 @@ class pipe:
 def reset_game():
     global brid_x, brid_y, brid_y_change, touch_ground, jump_lock
     global score, pass_score, start_time, game_ending, final_score
-    global cactus1, cactus2, cactus3, cactus_list
+    global pipe1, pipe2, pipe3, cactus_list
 
     brid_x = 100  # reset bird position
     brid_y = 220
@@ -154,16 +154,16 @@ def reset_game():
     game_ending = False
 
     # recreate pipes
-    cactus1 = pipe(1200, pipe_y, "cactus1", pipe_w, pipe_h, 10, 1)
-    cactus2 = pipe(1600, pipe_y, "cactus2", pipe_w, pipe_h, 10, 1)
-    cactus3 = pipe(2000, pipe_y, "cactus3", pipe_w, pipe_h, 10, 1)
-    cactus_list = [cactus1, cactus2, cactus3]
+    pipe1 = pipe(1200, pipe_y, "pipe1", pipe_w, pipe_h, 10, 1)
+    pipe2 = pipe(1600, pipe_y, "pipe2", pipe_w, pipe_h, 10, 1)
+    pipe3 = pipe(2000, pipe_y, "pipe3", pipe_w, pipe_h, 10, 1)
+    cactus_list = [pipe1, pipe2, pipe3]
 
 # create pipes
-cactus1 = pipe(1200, pipe_y, "cactus1", pipe_w, pipe_h, 10, 1)
-cactus2 = pipe(1600, pipe_y, "cactus2", pipe_w, pipe_h, 10, 1)
-cactus3 = pipe(2000, pipe_y, "cactus3", pipe_w, pipe_h, 10, 1)
-cactus_list = [cactus1, cactus2, cactus3]
+pipe1 = pipe(1200, pipe_y, "pipe1", pipe_w, pipe_h, 10, 1)
+pipe2 = pipe(1600, pipe_y, "pipe2", pipe_w, pipe_h, 10, 1)
+pipe3 = pipe(2000, pipe_y, "pipe3", pipe_w, pipe_h, 10, 1)
+cactus_list = [pipe1, pipe2, pipe3]
 
 # main game loop
 while not quit_game:
@@ -186,6 +186,7 @@ while not quit_game:
                 quit_game = True
                 game_ending = False
                 break
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_x:
                     quit_game = True
