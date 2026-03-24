@@ -203,9 +203,10 @@ while not quit_game:
             quit_game = True
 
         if event.type == pygame.MOUSEBUTTONDOWN:
+                pygame.mixer.music.load('wing.wav')
+                pygame.mixer.music.play()
                 brid_y_change = jump_power  # jump
                 touch_ground = False
-                pygame.mixer.Sound("wing.wav")
                 jump_lock = True
 
     # apply movement
