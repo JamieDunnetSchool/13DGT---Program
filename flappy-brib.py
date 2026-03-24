@@ -4,68 +4,87 @@ import pygame
 import time
 import random
 
-pygame.init()
+pygame.init()  # starts pygame
 
-screen = pygame.display.set_mode((288, 512))
-pygame.display.set_caption("Fabbly- prip")
+# Screen and icon set up
+screen = pygame.display.set_mode((288, 512))  # creates game window
+pygame.display.set_caption("Fabbly- prip")  # window title
+game_icon = pygame.image.load("favicon.ico")  # loads icon image
+pygame.display.set_icon(game_icon)  # sets icon
 
-game_icon = pygame.image.load("favicon.ico")
-pygame.display.set_icon(game_icon)
+#Backround 
+background = pygame.image.load("background-day.png").convert()  # loads background image
+background = pygame.transform.smoothscale(background, (288, 512))  # resizes background
+pygame.key.set_repeat()  # allows holding keys
 
-background = pygame.image.load("background-day.png").convert()
-background = pygame.transform.smoothscale(background, (288, 512))
-
-pygame.key.set_repeat()
-
+# colours
 green = (188, 227, 199)
 black = (0, 0, 0)
 white = (255, 255, 255)
 red = (255, 0, 0)
 blue = (78, 159, 229)
 brown = (150, 75, 0)
-FPS = 30
-quit_game = False
+
+FPS = 30  # frames per second
+quit_game = False  # controls main loop
 textX = 10
 textY = 10
-clock = pygame.time.Clock()
+clock = pygame.time.Clock()  # controls timing
+
+# bird position and size
 brid_x = 100
 brid_y = 220
 brid_w = 40
 brid_h = 40
-cactus_x = 1200
-cactus_y = 250
-cactus_w = 40
-cactus_h = 400
+
+# pipe starting position and size
+pipe_x = 1200
+pipe_y = -250
+pipe_w = 40
+pipe_h = 400
+
+# movement variables
 llama_x_change = 0
-llama_y_change = 0
-start_time = time.time()
-ground_y = 512 - brid_h
-gravity = 1
-jump_power = -12
+brid_y_change = 0
+
+start_time = time.time()  # start timer for score
+
+ground_y = 512 - brid_h  # ground level
+
+gravity = 1  # gravity pulling bird down
+jump_power = -12  # jump strength
+
+# scoring
 score = 0
 pass_score = 0
 final_score = 0
+
+# game states
 game_over = False
 game_ending = False
-font = pygame.font.Font("freesansbold.ttf", 20)
 
+font = pygame.font.Font("freesansbold.ttf", 20)  # font for text
+
+# Message settings
 def message(msg, txt_colour, bkgd_colour):
-    txt = font.render(msg, True, txt_colour, bkgd_colour)
-    text_box = txt.get_rect(center=(144, 256))
-    screen.blit(txt, text_box)
+    txt = font.render(msg, True, txt_colour, bkgd_colour)  # renders text
+    text_box = txt.get_rect(center=(144, 256))  # centers text
+    screen.blit(txt, text_box)  # draws text
 
-def show_score(x, y):
-    score_text = font.render("Score: " + str(score), True, (255, 255, 255))
-    hi_text = font.render("High: " + str(high_score), True, (255, 255, 255))
-    screen.blit(score_text, (x, y))
-    screen.blit(hi_text, (x, y + 25))
+# Score settings
+def show_score(x, y): 
+    score_text = font.render("Score: " + str(score), True, (255, 255, 255))  # score text
+    hi_text = font.render("High: " + str(high_score), True, (255, 255, 255))  # high score text
+    screen.blit(score_text, (x, y))  # draw score
+    screen.blit(hi_text, (x, y + 25))  # draw high score
 
+#high score settings
 def load_high_score():
     try:
-        with open("highsocre.txt", "r") as hi_score_file:
+        with open("highsocre.txt", "r") as hi_score_file:  # read file
             value = hi_score_file.read().strip()
     except FileNotFoundError:
-        with open("highsocre.txt", "w") as hi_score_file:
+        with open("highsocre.txt", "w") as hi_score_file:  # create file if missing
             hi_score_file.write("0")
         value = "0"
 
@@ -74,84 +93,92 @@ def load_high_score():
     return int(value)
 
 def save_high_score(value):
-    with open("highsocre.txt", "w") as hi_score_file:
+    with open("highsocre.txt", "w") as hi_score_file:  # save score to file
         hi_score_file.write(str(value))
 
-high_score = load_high_score()
+high_score = load_high_score()  # load high score at start
 
-class cactus:
-    def __init__(self, cactus_x, cactus_y, name, w, h, speed, points):
-        self.cactus_x = cactus_x
-        self.cactus_y = cactus_y
-        self.name = name
-        self.w = w
-        self.h = h
-        self.speed = speed
-        self.points = points
+#Pipe settings
+class pipe:
+    def __init__(self, pipe_x, pipe_y, name, w, h, speed, points):
+        self.pipe_x = pipe_x  # x position
+        self.pipe_y = pipe_y  # y position
+        self.name = name  # name of pipe
+        self.w = w  # width
+        self.h = h  # height
+        self.speed = speed  # movement speed
+        self.points = points  # points given
 
     def make_food(self):
-        cactu = pygame.Rect(self.cactus_x, self.cactus_y, self.w, self.h)
-        cac = pygame.image.load("pipe-green.png").convert_alpha()
-        cac_flip = pygame.transform.flip(cac, False, True)
-        resized_cac = pygame.transform.smoothscale(cac_flip, [self.w, self.h])
-        screen.blit(resized_cac, cactu)
+        pipetu = pygame.Rect(self.pipe_x, self.pipe_y, self.w, self.h)  # pipe hitbox
+        pip = pygame.image.load("pipe-green.png").convert_alpha()  # load pipe image
+        pipe_flip = pygame.transform.flip(pip, False, True)  # flip pipe
+        resized_pipe = pygame.transform.smoothscale(pipe_flip, [self.w, self.h])  # resize
+        screen.blit(resized_pipe, pipetu)  # draw pipe
 
     def hit(self, brid_x, brid_y, brid_w, brid_h):
         global game_ending, final_score, score
-        self.cactus_x -= self.speed
-        cactus_rect = pygame.Rect(self.cactus_x, self.cactus_y, self.w, self.h)
-        llama_rect = pygame.Rect(brid_x, brid_y, brid_w, brid_h)
+        self.pipe_x -= self.speed  # move pipe left
 
-        if llama_rect.colliderect(cactus_rect):
+        cactus_rect = pygame.Rect(self.pipe_x, self.pipe_y, self.w, self.h)  # pipe hitbox
+        llama_rect = pygame.Rect(brid_x, brid_y, brid_w, brid_h)  # bird hitbox
+
+        if llama_rect.colliderect(cactus_rect):  # collision check
             if game_ending == False:
-                final_score = int(time.time() - start_time) + pass_score
+                final_score = int(time.time() - start_time) + pass_score  # final score
                 score = final_score
-            game_ending = True
+            game_ending = True  # end game
 
-        if self.cactus_x < -self.w:
-            self.cactus_x = 1000 + random.randint(200, 600)
-            return self.points
+        if self.pipe_x < -self.w: 
+            self.pipe_x = 1000 + random.randint(200, 600)  #Respawn pipe
+            pipe_y = self.pipe_y = random.randrange(-300, -100, 40)  # Hight of pipe
+            print(self.pipe_y)
+            return self.points  # add points
         return 0
 
 def reset_game():
-    global brid_x, brid_y, llama_y_change, touch_ground, jump_lock
+    global brid_x, brid_y, brid_y_change, touch_ground, jump_lock
     global score, pass_score, start_time, game_ending, final_score
     global cactus1, cactus2, cactus3, cactus_list
 
-    brid_x = 100
+    brid_x = 100  # reset bird position
     brid_y = 220
-    llama_y_change = 0
+    brid_y_change = 0
     touch_ground = False
     jump_lock = False
 
-    score = 0
+    score = 0  # reset scores
     pass_score = 0
     final_score = 0
     start_time = time.time()
     game_ending = False
 
-    cactus1 = cactus(1200, cactus_y, "cactus1", cactus_w, cactus_h, 10, 1)
-    cactus2 = cactus(1600, cactus_y, "cactus2", cactus_w, cactus_h, 10, 1)
-    cactus3 = cactus(2000, cactus_y, "cactus3", cactus_w, cactus_h, 10, 1)
+    # recreate pipes
+    cactus1 = pipe(1200, pipe_y, "cactus1", pipe_w, pipe_h, 10, 1)
+    cactus2 = pipe(1600, pipe_y, "cactus2", pipe_w, pipe_h, 10, 1)
+    cactus3 = pipe(2000, pipe_y, "cactus3", pipe_w, pipe_h, 10, 1)
     cactus_list = [cactus1, cactus2, cactus3]
 
-cactus1 = cactus(1200, cactus_y, "cactus1", cactus_w, cactus_h, 10, 1)
-cactus2 = cactus(1600, cactus_y, "cactus2", cactus_w, cactus_h, 10, 1)
-cactus3 = cactus(2000, cactus_y, "cactus3", cactus_w, cactus_h, 10, 1)
+# create pipes
+cactus1 = pipe(1200, pipe_y, "cactus1", pipe_w, pipe_h, 10, 1)
+cactus2 = pipe(1600, pipe_y, "cactus2", pipe_w, pipe_h, 10, 1)
+cactus3 = pipe(2000, pipe_y, "cactus3", pipe_w, pipe_h, 10, 1)
 cactus_list = [cactus1, cactus2, cactus3]
 
+# main game loop
 while not quit_game:
 
+    # game over screen loop
     while game_ending == True:
         score = final_score
-
+        
         if score > high_score:
             high_score = score
             save_high_score(high_score)
-
-        screen.blit(background, (0, 0))
-        show_score(textX, textY)
-        message("You died! Press X to quit, C to play again", black, white)
+        
+        screen.blit(background, (0, 0))  # draw background
+        show_score(textX, textY)  # show score
+        message("You died! Press X to quit, C to play again", black, white)  # show message
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -165,56 +192,63 @@ while not quit_game:
                     game_ending = False
                     break
                 elif event.key == pygame.K_c:
-                    reset_game()
+                    reset_game()  # restart game
                     break
 
         clock.tick(FPS)
 
+    # input handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             quit_game = True
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-                llama_y_change = jump_power
+                brid_y_change = jump_power  # jump
                 touch_ground = False
+                pygame.mixer.Sound("wing.wav")
                 jump_lock = True
 
-    brid_y += llama_y_change
-    llama_y_change += gravity
-
-    if brid_y >= ground_y:
+    # apply movement
+    brid_y += brid_y_change
+    brid_y_change += gravity
+        
+    if brid_y >= ground_y:  # ground collision
         brid_y = ground_y
-        llama_y_change = 0
+        brid_y_change = 0
         touch_ground = True
 
-    if brid_y < 0:
+    if brid_y < 0:  # ceiling limit
         brid_y = 0
-        llama_y_change = 0
+        brid_y_change = 0
+    score = int(time.time() - start_time) + pass_score  # update score
 
-    score = int(time.time() - start_time) + pass_score
+    screen.blit(background, (0, 0))  # draw background
+   
+    # draw bird
+    prip = pygame.Rect(brid_x, brid_y, brid_h, brid_w)
+    fakeprip = pygame.image.load("yellowbird-midflap.png").convert_alpha()
+    resized_prip = pygame.transform.smoothscale(fakeprip, [brid_h, brid_w])
+    screen.blit(resized_prip, prip)
 
-    screen.blit(background, (0, 0))
-
-
-    llama = pygame.Rect(brid_x, brid_y, brid_h, brid_w)
-    fakellama = pygame.image.load("yellowbird-midflap.png").convert_alpha()
-    resized_llama = pygame.transform.smoothscale(fakellama, [brid_h, brid_w])
-    screen.blit(resized_llama, llama)
-
+    # (duplicate draw - acts like extra render)
     floor = pygame.Rect(brid_x, brid_y, brid_h, brid_w)
     fakefloor = pygame.image.load("yellowbird-midflap.png").convert_alpha()
-    resized_floor = pygame.transform.smoothscale(fakellama, [brid_h, brid_w])
-    screen.blit(resized_llama, llama)
+    resized_floor = pygame.transform.smoothscale(fakeprip, [brid_h, brid_w])
+    screen.blit(resized_prip, prip)
 
+    if brid_y == 472:  # if hits ground
+            game_ending = True
 
+    # pipes loop
     for items in cactus_list:
-        items.make_food()
-        pass_score += items.hit(brid_x, brid_y, brid_w, brid_h)
+        items.make_food()  # draw pipe
+        pass_score += items.hit(brid_x, brid_y, brid_w, brid_h)  # check collision + scoring
 
-    show_score(textX, textY)
+    show_score(textX, textY)  # display score
     pygame.display.update()
     clock.tick(FPS)
 
+# save score on exit
 score = final_score if game_ending else int(time.time() - start_time) + pass_score
 if score > high_score:
     high_score = score
