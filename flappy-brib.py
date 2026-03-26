@@ -1,4 +1,4 @@
-### this program is a flappy brib game for playing
+"""This file program is a flappy brib game for playing."""
 
 import pygame
 import time
@@ -12,7 +12,7 @@ pygame.display.set_caption("Fabbly- prip")
 game_icon = pygame.image.load("favicon.ico")
 pygame.display.set_icon(game_icon)
 
-#Backround
+# Backround
 background = pygame.image.load("background-day.png").convert()
 background = pygame.transform.smoothscale(background, (288, 512))
 pygame.key.set_repeat()
@@ -27,30 +27,27 @@ brown = (150, 75, 0)
 
 FPS = 30
 quit_game = False
-textX = 10
-textY = 10
+textx = 10
+texty = 10
 clock = pygame.time.Clock()
 
-# bird position and size
+# Bird position and size
 brid_x = 100
 brid_y = 220
 brid_w = 40
 brid_h = 40
 
-# pipe starting position and size
+# Pipe starting position and size
 pipe_x = 1200
 pipe_y = -250
 pipe_w = 60
 pipe_h = 400
 
-# movement variables
+# Movement variables
 llama_x_change = 0
 brid_y_change = 0
-
 start_time = time.time()
-
 ground_y = 512 - brid_h
-
 gravity = 1
 jump_power = -12
 
@@ -62,24 +59,27 @@ final_score = 0
 # game states
 game_over = False
 game_ending = False
-
 font = pygame.font.Font("freesansbold.ttf", 20)
 
-# Message settings
+
 def message(msg, txt_colour, bkgd_colour):
+    """Return the color and font values of the text."""
     txt = font.render(msg, True, txt_colour, bkgd_colour)
     text_box = txt.get_rect(center=(144, 256))
     screen.blit(txt, text_box)
 
-# Score settings
+
 def show_score(x, y):
+    """Return the lattuide and landutude values of the text."""
     score_text = font.render("Score: " + str(score), True, (255, 255, 255))
     hi_text = font.render("High: " + str(high_score), True, (255, 255, 255))
     screen.blit(score_text, (x, y))
     screen.blit(hi_text, (x, y + 25))
 
-#high score settings
+
 def load_high_score():
+    """Return the sore values of the score to make the highscore."""
+
     try:
         with open("highsocre.txt", "r") as hi_score_file:
             value = hi_score_file.read().strip()
@@ -98,7 +98,6 @@ def save_high_score(value):
 
 high_score = load_high_score()
 
-#Pipe settings
 class pipe:
     def __init__(self, pipe_x, pipe_y, name, w, h, speed, points):
         self.pipe_x = pipe_x
@@ -185,16 +184,13 @@ def reset_game():
     pipe3 = pipe(2000, pipe_y, "pipe3", pipe_w, pipe_h, 10, 1)
     cactus_list = [pipe1, pipe2, pipe3]
 
-# create pipes
 pipe1 = pipe(1200, pipe_y, "pipe1", pipe_w, pipe_h, 10, 1)
 pipe2 = pipe(1600, pipe_y, "pipe2", pipe_w, pipe_h, 10, 1)
 pipe3 = pipe(2000, pipe_y, "pipe3", pipe_w, pipe_h, 10, 1)
 cactus_list = [pipe1, pipe2, pipe3]
 
-# main game loop
 while not quit_game:
 
-    # game over screen loop
     while game_ending == True:
         score = final_score
 
@@ -203,7 +199,7 @@ while not quit_game:
             save_high_score(high_score)
 
         screen.blit(background, (0, 0))
-        show_score(textX, textY)
+        show_score(textx, texty)
         message("You died! Press X to quit, C to play again", black, white)
         pygame.display.update()
 
@@ -224,7 +220,6 @@ while not quit_game:
 
         clock.tick(FPS)
 
-    # input handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             quit_game = True
@@ -236,7 +231,6 @@ while not quit_game:
                 touch_ground = False
                 jump_lock = True
 
-    # apply movement
     brid_y += brid_y_change
     brid_y_change += gravity
 
@@ -248,17 +242,14 @@ while not quit_game:
     if brid_y < 0:
         brid_y = 0
         brid_y_change = 0
-    score = int(time.time() - start_time) + pass_score
 
     screen.blit(background, (0, 0))
 
-    # draw bird
     prip = pygame.Rect(brid_x, brid_y, brid_h, brid_w)
     fakeprip = pygame.image.load("yellowbird-midflap.png").convert_alpha()
     resized_prip = pygame.transform.smoothscale(fakeprip, [brid_h, brid_w])
     screen.blit(resized_prip, prip)
 
-    # (duplicate draw - acts like extra render)
     floor = pygame.Rect(brid_x, brid_y, brid_h, brid_w)
     fakefloor = pygame.image.load("yellowbird-midflap.png").convert_alpha()
     resized_floor = pygame.transform.smoothscale(fakeprip, [brid_h, brid_w])
@@ -267,17 +258,16 @@ while not quit_game:
     if brid_y == 472:
             game_ending = True
 
-    # pipes loop
     for items in cactus_list:
         items.make_food()
         pass_score += items.hit(brid_x, brid_y, brid_w, brid_h)
 
-    show_score(textX, textY)
+    score = pass_score
+
+    show_score(textx, texty)
     pygame.display.update()
     clock.tick(FPS)
 
-# save score on exit
-score = final_score if game_ending else int(time.time() - start_time) + pass_score
 if score > high_score:
     high_score = score
 save_high_score(high_score)
