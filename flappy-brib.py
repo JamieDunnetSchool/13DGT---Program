@@ -79,7 +79,6 @@ def show_score(x, y):
 
 def load_high_score():
     """Return the sore values of the score to make the highscore."""
-
     try:
         with open("highsocre.txt", "r") as hi_score_file:
             value = hi_score_file.read().strip()
@@ -92,13 +91,17 @@ def load_high_score():
         return 0
     return int(value)
 
+
 def save_high_score(value):
+    """Return the Highscore  values of the file."""
     with open("highsocre.txt", "w") as hi_score_file:
         hi_score_file.write(str(value))
+
 
 high_score = load_high_score()
 
 class pipe:
+    """Represents a pipe location and points."""
     def __init__(self, pipe_x, pipe_y, name, w, h, speed, points):
         self.pipe_x = pipe_x
         self.pipe_y = pipe_y
