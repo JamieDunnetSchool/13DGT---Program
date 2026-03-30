@@ -8,7 +8,7 @@ pygame.init()
 
 # Screen and icon set up
 screen = pygame.display.set_mode((288, 512))
-pygame.display.set_caption("Fabbly- prip")
+pygame.display.set_caption("Fabbly-prip")
 game_icon = pygame.image.load("favicon.ico")
 pygame.display.set_icon(game_icon)
 
@@ -141,7 +141,7 @@ class pipe:
 
         if llama_rect.colliderect(cactus_rect):
             if game_ending == False:
-                final_score = int(time.time() - start_time) + pass_score
+                final_score = pass_score
                 score = final_score
             game_ending = True
 
